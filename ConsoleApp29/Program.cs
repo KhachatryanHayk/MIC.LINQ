@@ -11,81 +11,62 @@ namespace ConsoleApp29
         {
             var students = CreaterandomStudents(20).ToList();
 
-            bool b = students.Any(st => st.Age > 20 && st.Age <= 25);
-            Student s1 = students.FirstOrDefault(st => st.Age > 50);
-            //Student s2 = students.First(st => st.Age > 20 && st.Age <= 25);
-            var res1 = students.Where(st => st.Age > 20 && st.Age <= 25).ToList();
-            List<string> res2 = students.Select(p => p.Fullname).ToList();
+            students[19].Mark = 20;
+            students[5].Mark = 20;
 
-            var res3 = students
-                .Where(st => st.Age > 20 && st.Age <= 25)
-                .Select(st => st.Fullname)
-                .ToList();
-
-            object[] arr = { "A1", true, "B2", "A3", 10, };
-
+            Console.WriteLine("First");
+            foreach (var st in students)
+            {
+                Console.WriteLine($"{st.University}|{st.Name}|{st.Mark}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Task 1:");
             var task1 = students
                 .Where(st => st.Mark > 8)
                 .OrderByDescending(st => st.Mark)
                 .OrderBy(st => st.University);
 
-            ////foreach (var item in task1)
-            ////{
-            ////    Console.WriteLine($"{item.University}|{item.Mark}");
-            ////}
+            foreach (var item in task1)
+            {
+                Console.WriteLine($"{item.University}|{item.Mark}");
+            }
 
-            //Console.WriteLine();
-
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Task 2:");
             var task2 = students
                 .OrderByDescending(st => st.Mark)
+
                 .GroupBy(st => st.University)
 
-            .ToDictionary(st => st.Key, sts => sts.ToList())
+            .ToDictionary(st => st.Key, sts => sts)
+            ;
+
+            var task2Result = task2[University.Politexnik].Take(5)
+                .Concat(task2[University.AUA].Take(5))
+                .Concat(task2[University.EPH].Take(5));
+
+
+            foreach (var st in task2Result)
+            {
+                Console.WriteLine($"{st.University}|{st.Name}|{st.Mark}");
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Task 3:");
+            var task3 = students
+                .Distinct()
+                .OrderByDescending(st=>st.Mark)
+                .Take(1);
             ;
 
 
-
-
-            ////foreach (var item in task2)
-            ////{
-            ////    foreach (var st in task2[item.Key])
-            ////    {
-            ////        int i = 1;
-            ////        Console.WriteLine($"{st.University}|{st.Mark}");
-            ////        if (i == 5) break;
-            ////        i++;
-            ////    }
-            ////}
-
-            var task3 = students
-                .Distinct()
-                .GroupBy(st => st.Mark)
-
-                .ToDictionary(st => st.Key, sts => sts.ToList());
-                ;
-
-            
-            foreach (var item in task3)
+            foreach (var st in task3)
             {
-                Console.WriteLine(item.Key);
+               Console.WriteLine($"{st.University}|{st.Name}|{st.Mark}");
             }
-            //foreach (var item in task3)
-            //{
-            //    foreach (var st in task3[item.Key])
-            //    {
-            //        Console.WriteLine($"{st.University}|{st.Name}|{st.Mark}");
-            //    }
-            //}
-            //Console.WriteLine("Answer:");
-            //foreach (var st in task3[task3.Keys.Max()])
-            //{
-
-            //    Console.WriteLine($"Key({task3.Keys.Max()}){st.University}|{st.Name}|{st.Mark}");
-            //}
-
 
         }
-
         private static IEnumerable<Student> CreaterandomStudents(int count)
         {
             University[] universties = { University.AUA, University.EPH, University.Politexnik, University.Politexnik };
@@ -103,7 +84,6 @@ namespace ConsoleApp29
             }
         }
     }
-
     public class Student
     {
         public int Age { get; set; }
@@ -117,7 +97,6 @@ namespace ConsoleApp29
 
         public override string ToString() => Fullname;
     }
-
     public enum University
     {
         EPH,
